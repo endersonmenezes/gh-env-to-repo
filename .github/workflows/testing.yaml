@@ -32,7 +32,7 @@ jobs:
 
       - name: Install gh extension and create secret
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ENDERSON }}
         run: |
           echo "🚀 Install: gh-env-to-repo"
           if [[ ! $EXTENSIONS == *"gh-env-to-repo"* ]]; then
