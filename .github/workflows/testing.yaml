@@ -35,3 +35,35 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh extension install endersonmenezes/gh-env-to-repo
+          gh env-to-repo endersonmenezes gh-env-to-repo
+
+  proof-of-concept:
+    runs-on: ubuntu-latest
+    needs: creating_secret
+    steps:
+      - name: Verify secret
+        run: |
+          if [ -z "${{ secrets.TEST }}" ]; then
+            echo "Secret not found"
+            exit 1
+          else
+            echo "Secret found"
+          fi
+          if [ "${{ secrets.TEST }}" != "TEST" ]; then
+            echo "Secret value is not TEST"
+            exit 1
+          else
+            echo "Secret value is TEST"
+          fi
+          if [ -z "${{ secrets.TEST_WITH_QUOTES }}" ]; then
+            echo "Secret with quotes not found"
+            exit 1
+          else
+            echo "Secret with quotes found"
+          fi
+          if [ "${{ secrets.TEST_WITH_QUOTES }}" != "TEST" ]; then
+            echo "Secret with quotes value is not TEST"
+            exit 1
+          else
+            echo "Secret with quotes value is TEST"
+          fi
