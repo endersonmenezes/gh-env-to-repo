@@ -40,7 +40,11 @@ jobs:
           else
             gh extension upgrade gh-env-to-repo
           fi
-          gh extension list
+
+      - name: Create secret
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ENDERSON }}
+        run: |
           echo "📐 Set Git User and Email"
           git config --global user.name "GitHub Actions"
           git config --global user.email "noreply@enderson.dev"
