@@ -22,3 +22,14 @@ jobs:
 
       - name: Run ShellCheck
         run: shellcheck gh-env-to-repo
+
+  creating_secret:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install gh extension
+        run: |
+          gh extension install endersonmenezes/gh-env-to-repo
