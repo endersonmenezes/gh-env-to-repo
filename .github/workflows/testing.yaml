@@ -35,11 +35,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           EXTENSIONS=$(gh extension list)
-          echo $EXTENSIONS
+          gh extension remove env-to-repo
           if [[ ! $EXTENSIONS == *"gh-env-to-repo"* ]]; then
             gh extension install endersonmenezes/gh-env-to-repo
+          else
+            gh extension upgrade gh-env-to-repo
           fi
-          gh env-to-repo endersonmenezes gh-env-to-repo
 
   proof-of-concept:
     runs-on: ubuntu-latest
