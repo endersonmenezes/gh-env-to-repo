@@ -95,6 +95,7 @@ if [ -z "$2" ]; then
 fi
 
 # -- Main
+echo "Welcome to the GitHub CLI extension env-to-repo!"
 USERNAME=$(git config user.name)
 EMAIL=$(git config user.email)
 OWNER=${1:-$OWNER}
