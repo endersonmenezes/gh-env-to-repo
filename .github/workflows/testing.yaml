@@ -1,4 +1,4 @@
-name: Free Disk Space (Ubuntu)
+name: Testing and Linting - Create Secret from .env
 
 on:
   push:
