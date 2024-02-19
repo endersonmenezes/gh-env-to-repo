@@ -39,6 +39,12 @@ function verify_dot_env() {
         echo "The .env file does not exist in the current directory."
         exit 1
     fi
+    if [[ $(tail -c 1 .env | wc -l) -eq 0 ]]; then
+        echo "The .env file does not have a blank line at the end."
+        # Add a blank line at the end of the file
+        echo "" >>.env
+        echo "A blank line was added at the end of the .env file."
+    fi
 }
 
 # - Parse the .env file
@@ -47,6 +53,12 @@ function parse_dot_env() {
     VALUE_NAMES=()
     VALUE_KEYS=()
     while IFS= read -r line; do
+        # Remove leading/trailing whitespace
+        line=$(echo "$line" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+        echo $line
+        if [[ -z $line || $line == \#* ]]; then
+            continue # Skip empty lines and lines starting with '#'
+        fi
         # Eg. KEY=VALUE or KEY="VALUE"
         if [[ $line == *=* ]]; then
             KEY=$(echo "$line" | cut -d'=' -f1)
