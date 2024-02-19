@@ -25,7 +25,7 @@ jobs:
 
   creating_secret:
     runs-on: ubuntu-latest
-
+    needs: shellcheck
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
