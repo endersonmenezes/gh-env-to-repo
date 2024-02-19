@@ -41,7 +41,7 @@ jobs:
             gh extension upgrade gh-env-to-repo
           fi
           echo "🔑 Create secret"
-          gh env-to-repo endersonmenezes gh-env-to-repo
+          gh extension exec env-to-repo endersonmenezes gh-env-to-repo
 
   proof-of-concept:
     runs-on: ubuntu-latest
