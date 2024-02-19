@@ -1,5 +1,7 @@
 # GitHub Extension env-to-repo
 
+![GitHub License](https://img.shields.io/github/license/endersonmenezes/gh-env-to-repo?label=Project%20License)
+
 This GitHub Extension allow you to use gh cli to fast set a repository secrets from a .env file.
 
 ## Usage
