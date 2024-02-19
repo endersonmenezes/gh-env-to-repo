@@ -41,6 +41,9 @@ jobs:
             gh extension upgrade gh-env-to-repo
           fi
           gh extension list
+          echo "📐 Set Git User and Email"
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "noreply@enderson.dev"
           echo "🔑 Create secret"
           gh extension exec env-to-repo endersonmenezes gh-env-to-repo
 
