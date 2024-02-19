@@ -1,35 +1,102 @@
 #!/usr/bin/env bash
+
+##
+# Author: Enderson Menezes
+# Created: 2024-02-19
+# Description: This is a GitHub CLI extension that send a .env file from the local to repositorie secrets on GitHub.
+# Usage: gh env-to-repo [flags]
+##
+
 set -e
 
-echo "Hello gh-env-to-repo!"
+## Necessary Modules
+# - git
+if ! type -p git >/dev/null; then
+    echo "Git not found on the system" >&2
+    exit 1
+fi
 
-# Snippets to help get started:
+# - gh
+if ! type -p gh >/dev/null; then
+    echo "GitHub CLI not found on the system" >&2
+    exit 1
+fi
 
-# Determine if an executable is in the PATH
-# if ! type -p ruby >/dev/null; then
-#   echo "Ruby not found on the system" >&2
-#   exit 1
-# fi
+## Necessary Functions
 
-# Pass arguments through to another command
-# gh issue list "$@" -R cli/cli
+# - Verify if the owner and repository exists and the user has permission to access
+function verify_owner_and_repository() {
+    gh api repos/"${OWNER}"/"${REPOSITORY}" &>/dev/null || {
+        echo "The owner ${OWNER} and the repository ${REPOSITORY} does not exist or you do not have permission to access."
+        exit 1
+    }
+    echo "The owner ${OWNER} and the repository ${REPOSITORY} exists and you have permission to access."
+}
 
-# Using the gh api command to retrieve and format information
-# QUERY='
-#   query($endCursor: String) {
-#     viewer {
-#       repositories(first: 100, after: $endCursor) {
-#         nodes {
-#           nameWithOwner
-#           stargazerCount
-#         }
-#       }
-#     }
-#   }
-# '
-# TEMPLATE='
-#   {{- range $repo := .data.viewer.repositories.nodes -}}
-#     {{- printf "name: %s - stargazers: %v\n" $repo.nameWithOwner $repo.stargazerCount -}}
-#   {{- end -}}
-# '
-# exec gh api graphql -f query="${QUERY}" --paginate --template="${TEMPLATE}"
+# - Verify if the .env file exists
+function verify_dot_env() {
+    if [ ! -f .env ]; then
+        echo "The .env file does not exist in the current directory."
+        exit 1
+    fi
+}
+
+# - Parse the .env file
+function parse_dot_env() {
+    echo "Parsing the .env file..."
+    VALUE_NAMES=()
+    VALUE_KEYS=()
+    while IFS= read -r line; do
+        # Eg. KEY=VALUE or KEY="VALUE"
+        if [[ $line == *=* ]]; then
+            KEY=$(echo "$line" | cut -d'=' -f1)
+            VALUE=$(echo "$line" | cut -d'=' -f2)
+            if [[ $VALUE == *\"* ]]; then
+                VALUE=${VALUE//\"/}
+            fi
+            VALUE_NAMES+=("$KEY")
+            VALUE_KEYS+=("$VALUE")
+        fi
+    done
+    echo "The .env file was parsed successfully."
+}
+
+function create_secrets() {
+    echo "Creating the secrets..."
+    for i in "${!VALUE_NAMES[@]}"; do
+        gh secret set "${VALUE_NAMES[$i]}" -b "${VALUE_KEYS[$i]}" -R "${OWNER}"/"${REPOSITORY}"
+    done
+    echo "The secrets were created successfully."
+}
+## Necessary Args
+
+# Check $1 - Owner
+if [ -z "$1" ]; then
+    echo "Owner is required. Usage: gh env-to-repo [owner] [repository]"
+    read -rp "Owner: " OWNER
+fi
+
+# Creck $2 - Repository
+if [ -z "$2" ]; then
+    echo "Repository is required. Usage: gh env-to-repo [owner] [repository]"
+    read -rp "Repository: " REPOSITORY
+fi
+
+# -- Main
+USERNAME=$(git config user.name)
+EMAIL=$(git config user.email)
+OWNER=${1:-$OWNER}
+REPOSITORY=${2:-$REPOSITORY}
+echo "Hello, ${USERNAME} <${EMAIL}>! I will help you to send your .env file to the repository secrets ${OWNER}/${REPOSITORY}."
+
+# Check if the owner and repository exists and the user has permission to access
+verify_owner_and_repository
+
+# Check if .env file exists
+verify_dot_env
+
+# Parse the .env file
+parse_dot_env
+
+# Create the secrets using the GitHub CLI
+create_secrets
