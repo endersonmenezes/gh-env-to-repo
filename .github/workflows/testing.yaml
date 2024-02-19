@@ -81,3 +81,21 @@ jobs:
           else
             echo "Secret with quotes value is TEST"
           fi
+  
+  remove-secrets:
+    runs-on: ubuntu-latest
+    needs: proof-of-concept
+    steps:
+      - name: Remove secrets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ENDERSON }}
+        run: |
+          echo "🚀 Install: gh-env-to-repo"
+          if [[ ! $EXTENSIONS == *"gh-env-to-repo"* ]]; then
+            gh extension install endersonmenezes/gh-env-to-repo
+          else
+            gh extension upgrade gh-env-to-repo
+          fi
+          echo "🔑 Remove secret"
+          gh secret delete TEST --repo endersonmenezes/gh-env-to-repo
+          gh secret delete TEST_WITH_QUOTES --repo endersonmenezes/gh-env-to-repo
