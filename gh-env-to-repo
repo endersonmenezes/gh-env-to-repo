@@ -57,7 +57,7 @@ function parse_dot_env() {
             VALUE_NAMES+=("$KEY")
             VALUE_KEYS+=("$VALUE")
         fi
-    done
+    done <.env
     echo "The .env file was parsed successfully."
 }
 
