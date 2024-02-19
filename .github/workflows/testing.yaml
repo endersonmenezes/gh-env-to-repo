@@ -34,7 +34,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh extension install endersonmenezes/gh-env-to-repo
+          EXTENSIONS=$(gh extension list)
+          if [[ ! $EXTENSIONS == *"gh-env-to-repo"* ]]; then
+            gh extension install endersonmenezes/gh-env-to-repo
+          fi
           gh env-to-repo endersonmenezes gh-env-to-repo
 
   proof-of-concept:
