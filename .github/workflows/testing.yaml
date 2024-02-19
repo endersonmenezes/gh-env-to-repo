@@ -40,6 +40,7 @@ jobs:
           else
             gh extension upgrade gh-env-to-repo
           fi
+          gh extension list
           echo "🔑 Create secret"
           gh extension exec env-to-repo endersonmenezes gh-env-to-repo
 
