@@ -30,7 +30,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install gh extension
+      - name: Install gh extension and create secret
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -41,11 +41,6 @@ jobs:
           else
             gh extension upgrade gh-env-to-repo
           fi
-
-      - name: Create secret
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
           gh env-to-repo endersonmenezes gh-env-to-repo
 
   proof-of-concept:
