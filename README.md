@@ -5,7 +5,7 @@
 ![Static Badge](https://img.shields.io/badge/build-passing-brightgreen?label=shellcheck)
 
 
-This GitHub Extension allow you to use gh cli to fast set a repository secrets from a .env file.
+The extension, called 'env-to-repo', allows you to upload an .env file from your local directory to the repository secrets on GitHub. The extension checks the existence of the .env file in the current directory and whether the user has permission to access the repository.
 
 ## Usage
 
